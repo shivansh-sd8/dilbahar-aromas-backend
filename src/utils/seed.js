@@ -146,8 +146,15 @@ const cityPages = [
   { city: 'Mumbai', state: 'Maharashtra', areasServed: ['Andheri', 'Bandra', 'Thane'] },
 ];
 
+const RESET = process.argv.includes('--reset');
+
 async function seed() {
   await connectDB();
+
+  if (RESET) {
+    await mongoose.connection.dropDatabase();
+    logger.warn(`Dropped database "${mongoose.connection.name}" (--reset)`);
+  }
 
   const adminExists = await User.findOne({ email: env.adminEmail });
   if (!adminExists) {
