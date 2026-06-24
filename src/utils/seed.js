@@ -4,7 +4,6 @@ import logger from '../config/logger.js';
 import connectDB from '../config/db.js';
 import User from '../models/User.js';
 import Category from '../models/Category.js';
-import BlogPost from '../models/BlogPost.js';
 import CityPage from '../models/CityPage.js';
 import Product from '../models/Product.js';
 import { products as seedProductsData } from './seedCatalog.js';
@@ -170,11 +169,6 @@ async function seed() {
     await Category.findOneAndUpdate({ slug: c.slug }, c, { upsert: true, new: true, setDefaultsOnInsert: true });
   }
   logger.info(`Seeded ${categories.length} categories`);
-
-  for (const p of blogPosts) {
-    await BlogPost.findOneAndUpdate({ slug: p.slug }, { ...p, publishedAt: new Date() }, { upsert: true, new: true, setDefaultsOnInsert: true });
-  }
-  logger.info(`Seeded ${blogPosts.length} blog posts`);
 
   for (const city of cityPages) {
     const slug = `essential-oils-in-${city.city.toLowerCase()}`;
