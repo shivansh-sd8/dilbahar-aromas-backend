@@ -3,8 +3,9 @@ import ApiError from '../utils/ApiError.js';
 import BlogPost from '../models/BlogPost.js';
 
 // GET /api/blog  (public: published only) | ?all=true for admin
+// ?fields=slug,title to return only selected fields (lightweight for SSG)
 export const listPosts = asyncHandler(async (req, res) => {
-  const { language, tag, category, status, page = 1, limit = 12, q } = req.query;
+  const { language, tag, category, status, page = 1, limit = 12, q, fields } = req.query;
   const filter = {};
 
   // Public listing returns published only. Admins/editors see every status,
@@ -21,9 +22,20 @@ export const listPosts = asyncHandler(async (req, res) => {
   if (category) filter.category = category;
   if (q) filter.title = { $regex: q, $options: 'i' };
 
+  // Build projection if fields param provided (e.g., fields=slug,title)
+  let projection = null;
+  if (fields) {
+    projection = {};
+    fields.split(',').forEach((f) => {
+      const field = f.trim();
+      if (field) projection[field] = 1;
+    });
+  }
+
   const skip = (Number(page) - 1) * Number(limit);
+  const query = BlogPost.find(filter, projection).sort({ publishedAt: -1, createdAt: -1 }).skip(skip).limit(Number(limit));
   const [items, total] = await Promise.all([
-    BlogPost.find(filter).sort({ publishedAt: -1, createdAt: -1 }).skip(skip).limit(Number(limit)),
+    query,
     BlogPost.countDocuments(filter),
   ]);
 

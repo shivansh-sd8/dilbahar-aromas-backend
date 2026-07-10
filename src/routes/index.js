@@ -7,6 +7,7 @@ import contactRoutes from './contactRoutes.js';
 import productRoutes from './productRoutes.js';
 import enquiryRoutes from './enquiryRoutes.js';
 import orderRoutes from './orderRoutes.js';
+import siteConfigRoutes from './siteConfigRoutes.js';
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use('/contact', contactRoutes);
 router.use('/products', productRoutes);
 router.use('/enquiries', enquiryRoutes);
 router.use('/orders', orderRoutes);
+router.use('/site-config', siteConfigRoutes);
 
 export default router;
