@@ -16,6 +16,7 @@ const seo = Joi.object({
     'WebPage',
     'None'
   ),
+  jsonLd: Joi.string().allow(''),
 });
 
 const faq = Joi.object({

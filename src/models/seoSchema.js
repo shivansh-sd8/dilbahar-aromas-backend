@@ -19,6 +19,9 @@ export const SeoSchema = new Schema(
       enum: ['Article', 'BlogPosting', 'Product', 'LocalBusiness', 'FAQPage', 'WebPage', 'None'],
       default: 'WebPage',
     },
+    // Raw JSON-LD pasted by an editor. When set, it overrides the auto-generated
+    // primary schema for that page (breadcrumbs/FAQ are still auto-added).
+    jsonLd: { type: String, trim: true, default: '' },
   },
   { _id: false }
 );
